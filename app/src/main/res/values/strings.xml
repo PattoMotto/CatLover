@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">CatLover</string>
+    <string name="sharedPref">pref</string>
+    <string name="savedList">savedList</string>
+    <string name="removed">Removed</string>
+    <string name="notFound">Not found</string>
+    <string name="saved">Saved</string>
+    <string name="alreadySaved">It\'s already saved</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.pm.catlover
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.Nullable
@@ -12,9 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
+import android.widget.Toast
 import com.github.kittinunf.fuel.android.extension.responseJson
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
+import org.json.JSONArray
 
 class Feed : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -40,10 +43,34 @@ class Feed : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
             startActivity(intent)
         }
+        feedGridView?.onItemLongClickListener = AdapterView.OnItemLongClickListener { adapterView, view, i, l ->
+            onTakeActionWithGrid(i)
+            true
+        }
         swipe_container = view?.findViewById(R.id.swipe_container) as SwipeRefreshLayout
         swipe_container?.setOnRefreshListener(this)
         swipe_container?.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light)
         return view
+    }
+
+    private fun onTakeActionWithGrid(i: Int) {
+        when (mode) {
+            Mode.NORMAL -> {
+                if (flickrPostArray.get(i).savePost(context = context)) {
+                    Toast.makeText(context, R.string.saved, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, R.string.alreadySaved, Toast.LENGTH_SHORT).show()
+                }
+            }
+            Mode.LOVED -> {
+                if (flickrPostArray.get(i).removeSavePost(context = context)) {
+                    Toast.makeText(context, R.string.removed, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, R.string.notFound, Toast.LENGTH_SHORT).show()
+                }
+                refresh()
+            }
+        }
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -56,9 +83,39 @@ class Feed : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        when(mode) {
+        refresh()
+    }
+
+    private fun refresh() {
+        when (mode) {
             Mode.NORMAL -> loadFromApi()
+            Mode.LOVED -> loadFromSavedList()
         }
+    }
+
+    fun loadFromSavedList(){
+        val sharedPref = getSharedPref(context)
+        val savedListKey = getSavedListKey(context)
+        if (sharedPref.contains(savedListKey)) {
+            val jsonArray = JSONArray(sharedPref.getString(savedListKey, ""))
+            flickrPostArray.clear()
+            for (i in 0..(jsonArray.length() - 1)) {
+                flickrPostArray.add(FlickrPost.newInstance(jsonArray.getJSONObject(i)))
+            }
+            feedGridView?.adapter = FeedAdapter(getContext(), flickrPostArray)
+        }
+        swipe_container?.setRefreshing(false)
+
+    }
+
+    private fun getSavedListKey(context: Context): String? {
+        val savedListKey = context.getString(R.string.savedList)
+        return savedListKey
+    }
+    private fun getSharedPref(context: Context): SharedPreferences {
+        val sharedPrefKey = context.getString(R.string.sharedPref)
+        val sharedPref = context.getSharedPreferences(sharedPrefKey, Context.MODE_PRIVATE)
+        return sharedPref
     }
     fun loadFromApi(){
         swipe_container?.setRefreshing(true)
@@ -92,7 +149,7 @@ class Feed : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        loadFromApi()
+        refresh()
     }
     fun getTitle() : String?{
         return title
