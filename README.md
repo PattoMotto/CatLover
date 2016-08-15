@@ -7,9 +7,10 @@ By using [Flickr Api](https://www.flickr.com/services/api/flickr.photos.search.h
 [Gitignore](https://github.com/github/gitignore/blob/master/Android.gitignore) from Github
 
 # Todo
-- Write test
-- Save local data (loved pictures)
-- Clean code
+- [x] Show photo from Flickr
+- [x] Save local data (loved pictures)
+- [ ] Write test
+- [ ] Clean code
 
 # API_KEY
 You have to add `flickr_api_key` by your self
