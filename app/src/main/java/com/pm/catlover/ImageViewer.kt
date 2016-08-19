@@ -3,7 +3,7 @@ package com.pm.catlover
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_image_viewer.*
+import kotlinx.android.synthetic.main.image_include.*
 
 class ImageViewer : AppCompatActivity() {
     var flickrPost: FlickrPost? = null

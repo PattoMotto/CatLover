@@ -8,21 +8,10 @@
     tools:context="com.pm.catlover.ImageViewer"
     android:background="@android:color/background_dark">
 
-    <ImageView
+    <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        layout="@layout/image_include"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/imageViewerImageView"
-        android:scaleType="center" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/imageViewerTextView"
-        android:textColor="@android:color/white"
-        android:layout_margin="5dp"
-        android:gravity="center" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
