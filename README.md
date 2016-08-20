@@ -10,6 +10,7 @@ By using [Flickr Api](https://www.flickr.com/services/api/flickr.photos.search.h
 - [x] Show photo from Flickr
 - [x] Save local data (loved pictures)
 - [ ] Write test
+- [ ] [Use RxKotlin](https://github.com/ReactiveX/RxKotlin)
 - [ ] Clean code
 
 # API_KEY
